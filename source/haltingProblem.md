@@ -1,6 +1,4 @@
-﻿# 停止問題
-
-## 圖靈與停止問題
+﻿# 圖靈與停止問題
 
 圖靈是計算理論的先驅，他在 1936年於「On Computable Numbers, with an Application to the Entscheidungsproblem」 這篇論文中提出了「圖靈機」的概念，並且證明了「停止問題」是任何圖靈機都無法完美解答的問題，以下是停止問題的簡單描述。
 
