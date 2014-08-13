@@ -8,6 +8,6 @@
 | 4. [謂詞邏輯、一階邏輯與「哥德爾完備定理」](logicFOL.html)      |       |                                    |
 | 6. [從程式人的角度證明「哥德爾不完備定理」](logicGodel.html)  |       |                                    |
 | 7. [停止問題](haltingProblem.html) |      |                                    |
-| 8. [NP-Complete 問題](NP-complete.html) |      |                                    |
+| 8. [NP-Complete 問題](NP-Complete.html) |      |                                    |
 | 9. [結語](conclusion.html) |      |                                    |
 
