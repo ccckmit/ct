@@ -1,0 +1,95 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <title></title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <style type="text/css">
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; }
+code > span.dt { color: #902000; }
+code > span.dv { color: #40a070; }
+code > span.bn { color: #40a070; }
+code > span.fl { color: #40a070; }
+code > span.ch { color: #4070a0; }
+code > span.st { color: #4070a0; }
+code > span.co { color: #60a0b0; font-style: italic; }
+code > span.ot { color: #007020; }
+code > span.al { color: #ff0000; font-weight: bold; }
+code > span.fu { color: #06287e; }
+code > span.er { color: #ff0000; font-weight: bold; }
+  </style>
+  <link rel="stylesheet" href="../css/book.css" type="text/css" />
+</head>
+<body>
+<div id="header_wrap">
+  <h1><a href="book.html">計算理論 - 程式人觀點</a></h1>
+  <table id="bar" border="0" style="border:0;"><tr style="border:0;">
+    <td style="text-align:left;border:0;"> <a href="book.html">目錄</a> | <a href="download.html">下載</a></td>
+    <td style="text-align:right;border:0;"><a href="http://ccckmit.wikidot.com/">陳鍾誠</a> 於 <a href="http://www.nqu.edu.tw/">金門大學</a></td>
+  </tr></table>
+</div>
+<div id="content">
+<div id="TOC">
+<ul>
+<li><a href="#停止問題">停止問題</a><ul>
+<li><a href="#圖靈與停止問題">圖靈與停止問題</a></li>
+<li><a href="#停止問題不可判定">停止問題不可判定</a></li>
+<li><a href="#停止問題的意義">停止問題的意義</a></li>
+</ul></li>
+</ul>
+</div>
+<h1 id="停止問題"><a href="#停止問題">停止問題</a></h1>
+<h2 id="圖靈與停止問題"><a href="#圖靈與停止問題">圖靈與停止問題</a></h2>
+<p>圖靈是計算理論的先驅，他在 1936年於「On Computable Numbers, with an Application to the Entscheidungsproblem」 這篇論文中提出了「圖靈機」的概念，並且證明了「停止問題」是任何圖靈機都無法完美解答的問題，以下是停止問題的簡單描述。</p>
+<pre><code>1. 請問您是否有辦法寫一個程式，判斷另一個程式會不會停，
+2. 如果會停就輸出 1，不會停就輸出 0。</code></pre>
+<h2 id="停止問題不可判定"><a href="#停止問題不可判定">停止問題不可判定</a></h2>
+<p>由於圖靈的證明是建構在圖靈機上的，而圖靈機又很難用幾句話簡單描述，因此我們改用「現代程式」的方法證明停止問題，證明過程如下：</p>
+<p>停止問題採用教數學的方式來說，是我們想定義一個函數 isHalt(code, data) ， 該函數可以判斷程式 code 在輸入 data 之後，是否會停止， 也就是 code(data) 會不會停止。</p>
+<p>如我用程式寫下來，可寫成如下的演算法：</p>
+<pre><code>isHalt(code, data) = 1  假如 code(data) 會停就輸出 1
+                   = 0  假如 code(data) 不停就輸出 0</code></pre>
+<p>但是、假如上述函數真的存在，那麼我們就可以寫出下列這個函數：</p>
+<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">function</span> <span class="fu">U</span>(code) <span class="co">// 故意用來為難 isHalt(code, data) 的函數。</span>
+  <span class="kw">if</span> (<span class="fu">isHalt</span>(code, code)==<span class="dv">1</span>) <span class="co">// 如果 isHalt(U, U)=1，代表判斷會停</span>
+    loop forever <span class="co">//   那 U 就進入無窮迴圈不停了，所以 isHalt(U,U) 判斷錯誤了。</span>
+  <span class="kw">else</span>           <span class="co">// 如果 isHalt(U, U)=0，代表判斷不停</span>
+    halt         <span class="co">//   那 U 就立刻停止，所以 isHalt(U,U) 又判斷錯誤了。</span>
+end</code></pre>
+<p>如此、請問 isHalt(U,U) 應該是甚麼呢？ 這可以分成兩種情況探討：</p>
+<pre><code>1. 假如 isHalt(U, U) 傳回 1，那麼就會進入無窮回圈 loop forever，
+   也就是 U(U) 不會停 
+ 
+=&gt; 但是 isHalt(U,U)=1 代表 isHalt 判斷 U(U) 是會停的啊？
+   於是 isHalt(U, U) 判斷錯誤了。
+ 
+2. 假如 isHalt(U, U) 傳回 0，那麼就會進入 else 區塊的 halt，
+   也就是 U(U) 會立刻停止
+ 
+=&gt; 但是 isHalt(U,U)=0 代表 isHalt 判斷 U(U) 是不會停的啊？
+   於是 isHalt(U, U) 又判斷錯誤了。
+ 
+於是、我們證明了停止問題是不可能做到 100% 正確的，
+因為 isHalt 永遠對 U(U) 做了錯誤的判斷。</code></pre>
+<h2 id="停止問題的意義"><a href="#停止問題的意義">停止問題的意義</a></h2>
+<p>從上述的論證中，我們看到 isHalt(code, data) 這個問題是無法被 100% 正確解答的，因為這個問題與「羅素的理髮師問題」一樣，都是會導制矛盾的，因此我們可以根據「矛盾證法」的推論，發現這樣的問題是無法被「圖靈機或現代電腦」所正確解答的。</p>
+<p>在 <a href="http://zh.wikisource.org/wiki/%E9%9F%93%E9%9D%9E%E5%AD%90/%E9%9B%A3%E4%B8%80">「韓非子/難一」</a> 篇當中，曾經提到一個「矛與盾」的故事，原文截錄如下：</p>
+<blockquote>
+<p>楚人有鬻楯與矛者，譽之曰︰『吾楯之堅，物莫能陷也。』又譽其矛曰︰『吾矛之利，於物無不陷也。』或曰︰『以子之矛陷子之楯，何如？』其人弗能應也。</p>
+</blockquote>
+<p>現代電腦的能力基本上也只相當於一個記憶空間有限的圖靈機，因此一但證實了圖靈機無法解決某問題，那麼現代電腦也就無法解決該問題了。</p>
+<p>相反的、假如我們可以證明「一個擁有無限記憶體的現代電腦」無法解決某個問題，那麼、應該也就可以證明圖靈機無法解決該問題了。</p>
+<p>【本文由陳鍾誠取材並修改自 [維基百科]，採用創作共用的 <a href="http://creativecommons.org/licenses/by-sa/3.0/tw/">姓名標示、相同方式分享</a> 授權】</p>
+</div>
+<div id="footer">
+<a href="http://ccckmit.wikidot.com">陳鍾誠</a>衍生自<a href="http://zh.wikipedia.org/">維基百科</a>之作品：採用 <a href="http://creativecommons.org/licenses/by-sa/3.0/tw/ ">創作共用：姓名標示、相同方式分享</a> 的 <a href="license.html">授權方式</a>。
+</div>
+</body>
+</html>
